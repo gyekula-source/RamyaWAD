@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNest - Cart</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero small">
+    <div class="container">
+      <div class="logo">BookNest</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="catalogue.html">Catalogue</a>
+        <a href="cart.html" class="active">Cart</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="card">
+      <h1>Your Cart</h1>
+      <p class="muted">Review your selected books and proceed to payment.</p>
+
+      <div id="cartItems"></div>
+
+      <div class="cart-summary" id="summary"></div>
+      <div class="btn-row">
+        <button id="payButton" class="btn">Proceed to Payment</button>
+        <a class="btn btn-alt" href="catalogue.html">Back to Catalogue</a>
+      </div>
+      <p id="payMessage" class="message"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">This is a static demo checkout page.</div>
+  </footer>
+
+  <script>
+    function getCart() {
+      const raw = localStorage.getItem('bookCart');
+      if (!raw) return [];
+      try { return JSON.parse(raw); } catch { return []; }
+    }
+
+    function formatMoney(v) {
+      return '$' + v.toFixed(2);
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cartItems');
+      const summary = document.getElementById('summary');
+
+      if (!cart.length) {
+        container.innerHTML = '<p class="muted">Your cart is empty. Add books from the catalogue.</p>';
+        summary.innerHTML = '';
+        return;
+      }
+
+      let total = 0;
+      container.innerHTML = cart.map((item) => {
+        const line = item.price * item.qty;
+        total += line;
+        return `
+          <div class="cart-row">
+            <div>
+              <strong>${item.title}</strong>
+              <p class="muted">${item.author}</p>
+            </div>
+            <div class="right">
+              <span>${item.qty} x ${formatMoney(item.price)}</span>
+              <span class="price">${formatMoney(line)}</span>
+            </div>
+          </div>
+          <hr />
+        `;
+      }).join('');
+
+      summary.innerHTML = `<h3>Order Total: ${formatMoney(total)}</h3>`;
+    }
+
+    document.getElementById('payButton').addEventListener('click', () => {
+      const cart = getCart();
+      const payMessage = document.getElementById('payMessage');
+      if (!cart.length) {
+        payMessage.textContent = 'Your cart is empty—add books to proceed.';
+        payMessage.className = 'message error';
+        return;
+      }
+      localStorage.removeItem('bookCart');
+      renderCart();
+      payMessage.textContent = 'Payment complete. Thank you for your order!';
+      payMessage.className = 'message success';
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>

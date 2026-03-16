@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNest - Catalogue</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero small">
+    <div class="container">
+      <div class="logo">BookNest</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="catalogue.html" class="active">Catalogue</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="card">
+      <h1>Book Catalogue</h1>
+      <p class="muted">Choose a book and add it to your cart.</p>
+
+      <div class="catalogue-grid" id="bookGrid"></div>
+
+      <div class="cart-box">
+        <label for="selectBook">Add to cart:</label>
+        <div class="row-wrap">
+          <select id="selectBook" aria-label="Select a book to add">
+            <option value="">-- Pick a book --</option>
+          </select>
+          <button id="addButton" class="btn">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <a class="btn" href="cart.html">View Cart</a>
+      </div>
+      <div id="message" class="message" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Your cart stays in browser memory during this demo.</div>
+  </footer>
+
+  <script>
+    const books = [
+      { id: 1, title: 'Atomic Habits', author: 'James Clear', price: 12.99 },
+      { id: 2, title: 'The Alchemist', author: 'Paulo Coelho', price: 9.99 },
+      { id: 3, title: '1984', author: 'George Orwell', price: 8.49 },
+      { id: 4, title: 'The Silent Patient', author: 'Alex Michaelides', price: 11.5 }
+    ];
+
+    const selectBook = document.getElementById('selectBook');
+    const bookGrid = document.getElementById('bookGrid');
+    const addButton = document.getElementById('addButton');
+    const message = document.getElementById('message');
+
+    function renderBooks() {
+      bookGrid.innerHTML = books.map((book) => `
+        <article class="book-card">
+          <h3>${book.title}</h3>
+          <p class="muted">${book.author}</p>
+          <p class="price">$${book.price.toFixed(2)}</p>
+        </article>
+      `).join('');
+
+      selectBook.innerHTML = '<option value="">-- Pick a book --</option>' +
+        books.map((book) => `<option value="${book.id}">${book.title} - $${book.price.toFixed(2)}</option>`).join('');
+    }
+
+    function getCart() {
+      const raw = localStorage.getItem('bookCart');
+      if (!raw) return [];
+      try { return JSON.parse(raw); } catch { return []; }
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('bookCart', JSON.stringify(cart));
+    }
+
+    addButton.addEventListener('click', () => {
+      const selected = Number(selectBook.value);
+      if (!selected) {
+        message.textContent = 'Choose a book from the dropdown first.';
+        message.className = 'message error';
+        return;
+      }
+      const book = books.find((b) => b.id === selected);
+      if (!book) return;
+      const cart = getCart();
+      const existing = cart.find((item) => item.id === book.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...book, qty: 1 });
+      }
+      saveCart(cart);
+      message.textContent = `${book.title} added to cart.`;
+      message.className = 'message success';
+    });
+
+    renderBooks();
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNest - Login or Signup</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero small">
+    <div class="container">
+      <div class="logo">BookNest</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="catalogue.html">Catalogue</a>
+        <a href="cart.html">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="card">
+      <h1>Login or Signup</h1>
+      <p class="muted">Use this demo form for quick bookstore access.</p>
+
+      <div class="forms">
+        <form class="auth-form" id="loginForm">
+          <h3>Login</h3>
+          <label>Email</label>
+          <input type="email" placeholder="you@example.com" required />
+          <label>Password</label>
+          <input type="password" placeholder="*******" required />
+          <button type="submit" class="btn">Login</button>
+        </form>
+
+        <form class="auth-form" id="signupForm">
+          <h3>Signup</h3>
+          <label>Name</label>
+          <input type="text" placeholder="Your Name" required />
+          <label>Email</label>
+          <input type="email" placeholder="you@example.com" required />
+          <label>Password</label>
+          <input type="password" placeholder="Create password" required />
+          <button type="submit" class="btn">Create Account</button>
+        </form>
+      </div>
+
+      <p class="muted">After login, continue to <a href="catalogue.html">book catalogue</a>.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Simple demo bookstore pages.</div>
+  </footer>
+</body>
+</html>
